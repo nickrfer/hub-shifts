@@ -1,0 +1,16 @@
+version: '2'
+services:
+    hubshifts-mongodb:
+        image: mongo:3.2.10
+        ports:
+            - "27017:27017"
+        command: mongos --configdb hubshifts-mongodb-config
+    hubshifts-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    hubshifts-mongodb-config:
+        image: mongo:3.2.10
+        container_name: hubshifts-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
